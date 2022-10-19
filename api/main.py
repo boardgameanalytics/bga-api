@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from app.data import DataBase
-from app.routers import graph_router, rankings_router
+from api.data import BoardgamesDB
+from api.routers import graph_router, rankings_router
 
 API = FastAPI(
     title='BoardGameAnalytics REST API',
@@ -9,7 +9,7 @@ API = FastAPI(
     docs_url='/',
 )
 
-API.db = DataBase()
+API.db = BoardgamesDB()
 
 
 @API.get("/version")
