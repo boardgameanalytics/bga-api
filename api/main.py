@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from api.data import BoardgamesDB
-from api.routers import graph_router, rankings_router
+from api.routers import graph_router, games_router, groups_router
 
 API = FastAPI(
     title='BoardGameAnalytics REST API',
@@ -20,5 +20,5 @@ async def version():
     return {"result": {"Version": API.version}}
 
 
-for router in (graph_router, rankings_router):
+for router in (games_router, graph_router, groups_router):
     API.include_router(router.Router)

@@ -3,21 +3,10 @@ from typing import List, Optional, Literal, Union
 
 from pydantic import BaseModel, constr, Extra
 
-ORDER_COLS = Literal[
-    'game_id', 'title', 'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings',
-    'min_players', 'max_players', 'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies',
-    'wishlist', 'popularity'
-]
-
 FILTER_COLS = Literal[
     'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
     'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'kickstarter', 'popularity',
     'mechanics', 'categories', 'artists', 'publishers', 'designers'
-]
-
-GRAPH_COLS = Literal[
-    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
-    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
 ]
 
 
@@ -55,17 +44,37 @@ class FullGame(Game):
     description: constr(max_length=2000)
 
 
+class GameGroup(ExtraForbid):
+    name: str
+    earliest_release: date
+    latest_release: date
+    avg_rating: float
+    bayes_rating: float
+    total_ratings: int
+    std_ratings: float
+    weight: float
+    popularity: float
+
+
 class Filter(ExtraForbid):
     field: Literal[FILTER_COLS]
-    value: Union[str, int, float]  # need to clean str input to prevent SQL Injection attacks
+    value: Union[str, int, float]  # ToDo: clean str input to prevent SQL Injection attacks
     operator: Literal['=', '<', '>']
 
 
-class RankQuery(ExtraForbid):
-    order_by: ORDER_COLS
+class GameQuery(ExtraForbid):
     filter_by: Optional[List[Filter]]
+    order_by: Literal['game_id', 'title', 'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings',
+                      'min_players', 'max_players', 'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies',
+                      'wishlist', 'popularity']
     ascending: bool
-    limit_results: Optional[int] = 10
+    limit: Optional[int] = 20
+
+
+GRAPH_COLS = Literal[
+    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
+    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
+]
 
 
 class GraphQuery(ExtraForbid):
