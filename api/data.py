@@ -32,13 +32,9 @@ class BoardgamesDB:
         if query_obj.filter_by:
             sql_query += f" WHERE {' AND '.join([self.parse_filter(item) for item in query_obj.filter_by])}"
 
-        sql_query += f" ORDER BY {query_obj.order_by}"
-        if query_obj.ascending:
-            sql_query += f" ASC"
-        else:
-            sql_query += f" DESC"
-
-        sql_query += f" LIMIT {query_obj.limit}"
+        sql_query += f"""
+        ORDER BY {query_obj.order_by} {"ASC" if query_obj.ascending else "DESC"} 
+        LIMIT {query_obj.limit}"""
 
         return self.db.query(query=f"{sql_query};").to_dict(orient='records')
 
