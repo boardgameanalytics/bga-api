@@ -1,1 +1,1 @@
-python -m uvicorn api.main:API --reload
+uvicorn  api.main:API --host 0.0.0.0 --port 8000
