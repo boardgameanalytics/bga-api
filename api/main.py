@@ -6,7 +6,7 @@ from api.routers import artists_router, categories_router, designers_router, gam
 
 API = FastAPI(
     title='BoardGameAnalytics REST API',
-    version="0.0.1",
+    version="0.0.2",
     docs_url='/',
 )
 
@@ -15,9 +15,7 @@ API.db = BoardgamesDB()
 
 @API.get("/version")
 async def version():
-    """API version and password
-    <pre><code>
-    @return: JSON[JSON[String,String]]</pre></code>"""
+    """API version"""
     return {"result": {"Version": API.version}}
 
 

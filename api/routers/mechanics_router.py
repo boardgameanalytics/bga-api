@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 
 from api.data import BoardgamesDB
-from api.schema import GROUP_BY_FIELDS, ORDER_BY_FIELDS
-
+from api.schema import SummaryQuery, GamesQuery
 
 Router = APIRouter(
     tags=["Mechanics Operations"],
@@ -10,21 +9,20 @@ Router = APIRouter(
 Router.db = BoardgamesDB()
 
 
-@Router.get("/read/mechanics")
-async def read_mechanics(
-        order_by: ORDER_BY_FIELDS = 'name',
-        ascending: bool = True,
-        limit: int = 0
-):
-    """List game mechanics and aggregate statistics of matching games
-    <pre><code>
-    @param order_by: Literal['name', 'earliest_release', 'latest_release', 'avg_rating', 'bayes_rating',
-    'total_ratings', 'std_ratings', 'weight', 'popularity']
-    @param ascending: bool
-    @param limit: int
-    @return List[GroupSummary]</pre></code>
-    """
-    return Router.db.group_query(group_type="mechanic",
-                                 order_by=order_by,
-                                 ascending=ascending,
-                                 limit=limit)
+@Router.post("/mechanics")
+async def read_mechanics(body: SummaryQuery):
+    """List game mechanics and aggregate statistics of matching games"""
+    return Router.db.group_summary(group_type="mechanic",
+                                   order_by=body.order_by,
+                                   ascending=body.ascending,
+                                   limit=body.limit)
+
+
+@Router.post("/mechanics/{mechanic}")
+async def read_mechanic_games(mechanic: str, body: GamesQuery):
+    """List games with specific mechanic"""
+    return Router.db.group_games(group_type="mechanic",
+                                 group_name=mechanic,
+                                 order_by=body.order_by,
+                                 ascending=body.ascending,
+                                 limit=body.limit)

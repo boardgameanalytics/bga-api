@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 
 from api.data import BoardgamesDB
-from api.schema import GROUP_BY_FIELDS, ORDER_BY_FIELDS
-
+from api.schema import SummaryQuery, GamesQuery
 
 Router = APIRouter(
     tags=["Designers Operations"],
@@ -10,21 +9,20 @@ Router = APIRouter(
 Router.db = BoardgamesDB()
 
 
-@Router.get("/read/designers")
-async def read_designers(
-        order_by: ORDER_BY_FIELDS = 'name',
-        ascending: bool = True,
-        limit: int = 100
-):
-    """List game designers and aggregate statistics of matching games
-    <pre><code>
-    @param order_by: Literal['name', 'earliest_release', 'latest_release', 'avg_rating', 'bayes_rating',
-    'total_ratings', 'std_ratings', 'weight', 'popularity']
-    @param ascending: bool
-    @param limit: int
-    @return List[GroupSummary]</pre></code>
-    """
-    return Router.db.group_query(group_type="designer",
-                                 order_by=order_by,
-                                 ascending=ascending,
-                                 limit=limit)
+@Router.post("/designers")
+async def read_designers(body: SummaryQuery):
+    """List game designers and aggregate statistics of matching games"""
+    return Router.db.group_summary(group_type="category",
+                                   order_by=body.order_by,
+                                   ascending=body.ascending,
+                                   limit=body.limit)
+
+
+@Router.post("/designers/{designer}")
+async def read_category_games(designer: str, body: GamesQuery):
+    """List games by specific designer"""
+    return Router.db.group_games(group_type="designers",
+                                 group_name=designer,
+                                 order_by=body.order_by,
+                                 ascending=body.ascending,
+                                 limit=body.limit)
