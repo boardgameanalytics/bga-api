@@ -3,10 +3,19 @@ from typing import List, Optional, Literal, Union
 
 from pydantic import BaseModel, constr, Extra
 
+GROUP_BY_FIELDS = Literal['artist', 'category', 'designer', 'mechanic', 'publisher']
+ORDER_BY_FIELDS = Literal['name', 'earliest_release', 'latest_release', 'avg_rating', 'bayes_rating',
+                          'total_ratings', 'std_ratings', 'weight', 'popularity']
+
 FILTER_COLS = Literal[
     'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
     'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'kickstarter', 'popularity',
     'mechanics', 'categories', 'artists', 'publishers', 'designers'
+]
+
+GRAPH_COLS = Literal[
+    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
+    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
 ]
 
 
@@ -44,7 +53,7 @@ class FullGame(Game):
     description: constr(max_length=2000)
 
 
-class GameGroup(ExtraForbid):
+class GroupSummary(ExtraForbid):
     name: str
     earliest_release: date
     latest_release: date
@@ -69,12 +78,6 @@ class GameQuery(ExtraForbid):
                       'wishlist', 'popularity']
     ascending: bool
     limit: Optional[int] = 20
-
-
-GRAPH_COLS = Literal[
-    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
-    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
-]
 
 
 class GraphQuery(ExtraForbid):

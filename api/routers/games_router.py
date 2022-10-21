@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from fastapi import APIRouter
 
@@ -20,16 +20,17 @@ async def read_games(query: GameQuery):
     return Router.db.read_games(query_obj=query)
 
 
-@Router.get("/top/games/{order_by}")
-async def read_all_games(
-        order_by: Literal['bayes_rating', 'total_ratings', 'weight', 'popularity']
+@Router.get("/read/games/top/{order_by}")
+async def read_top_games(
+        order_by: Literal['bayes_rating', 'total_ratings', 'weight', 'popularity'],
+        ascending: Optional[bool] = False
 ):
     """List basic game data
     <pre><code>
     @return List[Game]</pre></code>"""
     query = GameQuery(
         order_by=order_by,
-        ascending=False,
+        ascending=ascending,
         limit=10
     )
     return Router.db.read_games(query_obj=query)
