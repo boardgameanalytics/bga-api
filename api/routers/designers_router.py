@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from api.data import BoardgamesDB
 from api.schema import SummaryQuery, GamesQuery
@@ -9,20 +9,20 @@ Router = APIRouter(
 Router.db = BoardgamesDB()
 
 
-@Router.post("/designers")
-async def read_designers(body: SummaryQuery):
+@Router.get("/designers")
+async def read_designers(params: SummaryQuery = Depends()):
     """List game designers and aggregate statistics of matching games"""
     return Router.db.group_summary(group_type="category",
-                                   order_by=body.order_by,
-                                   ascending=body.ascending,
-                                   limit=body.limit)
+                                   order_by=params.order_by,
+                                   ascending=params.ascending,
+                                   limit=params.limit)
 
 
-@Router.post("/designers/{designer}")
-async def read_category_games(designer: str, body: GamesQuery):
+@Router.get("/designers/{designer}")
+async def read_category_games(designer: str, params: GamesQuery = Depends()):
     """List games by specific designer"""
     return Router.db.group_games(group_type="designers",
                                  group_name=designer,
-                                 order_by=body.order_by,
-                                 ascending=body.ascending,
-                                 limit=body.limit)
+                                 order_by=params.order_by,
+                                 ascending=params.ascending,
+                                 limit=params.limit)
