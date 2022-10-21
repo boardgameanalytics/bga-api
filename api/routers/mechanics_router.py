@@ -18,11 +18,11 @@ async def read_mechanics(params: SummaryQuery = Depends()):
                                    limit=params.limit)
 
 
-@Router.get("/mechanics/{mechanic}")
-async def read_mechanic_games(mechanic: str, params: GamesQuery = Depends()):
+@Router.get("/mechanics/{mechanic_id}")
+async def read_mechanic_games(mechanic_id: int, params: GamesQuery = Depends()):
     """List games with specific mechanic"""
-    return Router.db.group_games(group_type="mechanic",
-                                 group_name=mechanic,
+    return Router.db.group_games(item_type="mechanic",
+                                 item_id=mechanic_id,
                                  order_by=params.order_by,
                                  ascending=params.ascending,
                                  limit=params.limit)

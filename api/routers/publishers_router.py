@@ -18,11 +18,11 @@ async def read_publishers(params: SummaryQuery = Depends()):
                                    limit=params.limit)
 
 
-@Router.get("/publishers/{publisher}")
-async def read_publisher_games(publisher: str, params: GamesQuery = Depends()):
+@Router.get("/publishers/{publisher_id}")
+async def read_publisher_games(publisher_id: int, params: GamesQuery = Depends()):
     """List games by specific publisher"""
-    return Router.db.group_games(group_type="publisher",
-                                 group_name=publisher,
+    return Router.db.group_games(item_type="publisher",
+                                 item_id=publisher_id,
                                  order_by=params.order_by,
                                  ascending=params.ascending,
                                  limit=params.limit)

@@ -18,11 +18,11 @@ async def read_categories(params: SummaryQuery = Depends()):
                                    limit=params.limit)
 
 
-@Router.get("/categories/{category}")
-async def read_category_games(category: str, params: GamesQuery = Depends()):
+@Router.get("/categories/{category_id}")
+async def read_category_games(category_id: int, params: GamesQuery = Depends()):
     """List games with specific category"""
-    return Router.db.group_games(group_type="categories",
-                                 group_name=category,
+    return Router.db.group_games(item_type="category",
+                                 item_id=category_id,
                                  order_by=params.order_by,
                                  ascending=params.ascending,
                                  limit=params.limit)

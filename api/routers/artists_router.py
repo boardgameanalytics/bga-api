@@ -18,11 +18,11 @@ async def read_artists(params: SummaryQuery = Depends()):
                                    limit=params.limit)
 
 
-@Router.get("/artists/{artist}")
-async def read_artist_games(artist: str, params: GamesQuery = Depends()):
+@Router.get("/artists/{artist_id}")
+async def read_artist_games(artist_id: int, params: GamesQuery = Depends()):
     """List games by specific artist"""
-    return Router.db.group_games(group_type="artist",
-                                 group_name=artist,
+    return Router.db.group_games(item_type="artist",
+                                 item_id=artist_id,
                                  order_by=params.order_by,
                                  ascending=params.ascending,
                                  limit=params.limit)

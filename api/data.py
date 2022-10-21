@@ -54,8 +54,8 @@ class BoardgamesDB:
         return self.db.query(query=query).to_dict(orient='records')
 
     def group_games(self,
-                    group_type: str,
-                    group_name: str,
+                    item_type: str,
+                    item_id: int,
                     order_by: str,
                     ascending: bool = False,
                     limit: int = 100) -> List[Dict]:
@@ -79,9 +79,9 @@ class BoardgamesDB:
             g.kickstarter,
             g.popularity
         FROM game g 
-        JOIN game_{group_type} gt on g.id = gt.game_id
-        JOIN {group_type} t on gt.{group_type}_id = t.id
-        WHERE t.name LIKE '{group_name}'
+        JOIN game_{item_type} gt on g.id = gt.game_id
+        JOIN {item_type} t on gt.{item_type}_id = t.id
+        WHERE t.id = '{item_id}'
         ORDER BY {order_by} {"ASC" if ascending else "DESC"} LIMIT {limit};
         """
         return self.db.query(query=sql_query).to_dict(orient='records')
