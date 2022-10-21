@@ -3,22 +3,6 @@ from typing import Optional, Literal
 
 from pydantic import BaseModel, constr, Extra
 
-GROUP_BY_FIELDS = Literal[
-    'artist', 'category', 'designer', 'mechanic', 'publisher'
-]
-GAMES_ORDER_BY_FIELDS = Literal[
-    'title', 'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
-    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'kickstarter', 'popularity'
-]
-AGG_ORDER_BY_FIELDS = Literal[
-    'name', 'earliest_release', 'latest_release', 'avg_rating', 'bayes_rating',
-    'total_ratings', 'std_ratings', 'weight', 'popularity'
-]
-GRAPH_COLS = Literal[
-    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
-    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
-]
-
 
 class ExtraForbid(BaseModel):
     class Config:
@@ -73,6 +57,12 @@ class SummaryQuery(ExtraForbid):
     limit: int = 100
 
 
+GRAPH_COLS = Literal[
+    'release_year', 'avg_rating', 'bayes_rating', 'total_ratings', 'std_ratings', 'min_players', 'max_players',
+    'min_playtime', 'max_playtime', 'min_age', 'weight', 'owned_copies', 'wishlist', 'popularity'
+]
+
+
 class GraphQuery(ExtraForbid):
-    x_axis: Literal[GRAPH_COLS]
-    y_axis: Optional[Literal[GRAPH_COLS]]
+    x_axis: GRAPH_COLS
+    y_axis: Optional[GRAPH_COLS]
