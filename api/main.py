@@ -6,7 +6,7 @@ from api.routers import artists_router, categories_router, designers_router, gam
 
 API = FastAPI(
     title='BoardGameAnalytics REST API',
-    version="0.0.2",
+    version="0.0.3",
     docs_url='/',
 )
 

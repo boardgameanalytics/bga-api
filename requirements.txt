@@ -1,5 +1,4 @@
 sqlalchemy
-pandas
 fastapi
 pydantic
 python-dotenv

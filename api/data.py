@@ -3,7 +3,6 @@ from typing import List, Dict
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from pandas import read_sql_query, DataFrame
 
 
 class SQL:
@@ -12,8 +11,9 @@ class SQL:
         load_dotenv()
         self.engine = create_engine(getenv('DB_URI'))
 
-    def query(self, query: str) -> DataFrame:
-        return read_sql_query(query, self.engine)
+    def query(self, query: str) -> List[Dict]:
+        with self.engine.connect() as conn:
+            return conn.execute(query).mappings().all()
 
 
 class BoardgamesDB:
@@ -26,10 +26,10 @@ class BoardgamesDB:
             *
         FROM game
         ORDER BY {order_by} {"ASC" if ascending else "DESC"} 
-        LIMIT {limit}
+        LIMIT {limit};
         """
 
-        return self.db.query(query=f"{sql_query};").to_dict(orient='records')
+        return self.db.query(query=sql_query)
 
     def group_summary(self, group_type: str, order_by: str, ascending: bool, limit: int) -> List[Dict]:
         query = f"""
@@ -51,7 +51,7 @@ class BoardgamesDB:
         ORDER BY {order_by} {"ASC" if ascending else "DESC"}
         {f"LIMIT {limit}" if limit > 0 else ""};
         """
-        return self.db.query(query=query).to_dict(orient='records')
+        return self.db.query(query=query)
 
     def group_games(self,
                     item_type: str,
@@ -84,4 +84,4 @@ class BoardgamesDB:
         WHERE t.id = '{item_id}'
         ORDER BY {order_by} {"ASC" if ascending else "DESC"} LIMIT {limit};
         """
-        return self.db.query(query=sql_query).to_dict(orient='records')
+        return self.db.query(query=sql_query)
